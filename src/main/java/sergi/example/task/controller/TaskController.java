@@ -1,5 +1,6 @@
 package sergi.example.task.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,18 +14,15 @@ import sergi.example.task.dto.TaskUpdateDTO;
 
 @RestController
 @RequestMapping("/tasks")
+@RequiredArgsConstructor
 public class TaskController {
-    private final TaskService taskService;
 
-    @Autowired
-    public TaskController(TaskService service) {
-        taskService = service;
-    }
+    private final TaskService taskService;
 
     @PutMapping(path = "/{id}/start-tracking", produces = MediaType.APPLICATION_JSON_VALUE)
     public TaskDTO startTracking(@PathVariable Long id) {
         TaskUpdateDTO data = new TaskUpdateDTO();
-        data.setStartedAt();
+        //data.setStartedAt();
         return taskService.update(id, data);
     }
 
