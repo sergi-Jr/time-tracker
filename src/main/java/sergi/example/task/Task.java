@@ -16,9 +16,10 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import sergi.example.model.BaseEntity;
 import sergi.example.user.User;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "tasks")
@@ -26,7 +27,7 @@ import java.time.LocalDate;
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-public class Task {
+public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -37,17 +38,17 @@ public class Task {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private LocalDate startedAt;
+    private Timestamp startedAt;
 
-    private LocalDate finishedAt;
+    private Timestamp finishedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private Timestamp createdAt;
 
     @LastModifiedDate
-    private LocalDate updatedAt;
+    private Timestamp updatedAt;
 }
