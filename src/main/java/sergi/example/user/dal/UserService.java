@@ -29,7 +29,8 @@ public class UserService {
 
     @Transactional
     public UserDTO update(Long id, UserUpdateDTO data) {
-        User model = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found, id: " + id));
+        User model = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found, id: " + id));
         userMapper.update(data, model);
         userRepository.save(model);
         return userMapper.map(model);

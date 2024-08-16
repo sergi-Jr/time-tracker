@@ -1,10 +1,8 @@
 package utils;
 
-import lombok.RequiredArgsConstructor;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import sergi.example.task.Task;
 import sergi.example.user.User;
