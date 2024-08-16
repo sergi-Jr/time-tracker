@@ -17,6 +17,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import sergi.example.model.BaseEntity;
 import sergi.example.task.Task;
 
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ import java.util.List;
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-public class User {
+public class User implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
