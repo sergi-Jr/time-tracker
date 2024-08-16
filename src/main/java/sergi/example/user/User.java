@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import sergi.example.model.BaseEntity;
 import sergi.example.task.Task;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +55,8 @@ public class User implements BaseEntity {
     }
 
     @CreatedDate
-    private LocalDate createdAt;
+    private Timestamp createdAt;
 
     @LastModifiedDate
-    private LocalDate updatedAt;
+    private Timestamp updatedAt;
 }
