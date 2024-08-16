@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -17,7 +17,7 @@ public class TaskUpdateDTO {
 
     private JsonNullable<Long> userId;
 
-    private JsonNullable<LocalDate> startedAt;
+    private JsonNullable<Timestamp> startedAt;
 
-    private JsonNullable<LocalDate> finishedAt;
+    private JsonNullable<Timestamp> finishedAt;
 }
