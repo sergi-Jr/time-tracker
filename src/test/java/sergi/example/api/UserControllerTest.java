@@ -1,10 +1,6 @@
 package sergi.example.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import net.datafaker.Faker;
-import org.instancio.Instancio;
-import org.instancio.Select;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -16,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import sergi.example.user.User;
 import sergi.example.user.dal.UserRepository;
 import sergi.example.user.dto.UserCreateDTO;
+import utils.InitData;
 
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +30,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private Faker faker;
+    private InitData init;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,21 +38,10 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    private User generateUser() {
-        return Instancio.of(User.class)
-                .ignore(Select.field(User::getId))
-                .ignore(Select.field(User::getCreatedAt))
-                .ignore(Select.field(User::getUpdatedAt))
-                .ignore(Select.field(User::getTasks))
-                .supply(Select.field(User::getName), () -> faker.name().name())
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .create();
-    }
-
     @Test
     @Order(1)
     void testCreate() throws Exception {
-        User user = generateUser();
+        User user = init.user();
         UserCreateDTO dto = new UserCreateDTO();
         dto.setEmail(user.getEmail());
         dto.setName(JsonNullable.of(user.getName()));
@@ -77,7 +63,7 @@ class UserControllerTest {
     @Test
     @Order(2)
     void testUpdate() throws Exception {
-        User user = generateUser();
+        User user = init.user();
         userRepository.save(user);
 
         Map<String, String> data = Map.of("email", "trueTest@example.com", "name", "John Doe");
