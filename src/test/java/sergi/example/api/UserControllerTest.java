@@ -76,7 +76,6 @@ class UserControllerTest {
 
     @Test
     @Order(2)
-    //TODO fix this test
     void testUpdate() throws Exception {
         User user = generateUser();
         userRepository.save(user);
