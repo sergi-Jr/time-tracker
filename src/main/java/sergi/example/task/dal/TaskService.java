@@ -21,6 +21,7 @@ public class TaskService {
         taskRepository = repository;
     }
 
+    @Transactional
     public TaskDTO update(Long id, TaskUpdateDTO data) {
         Task model = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not found: " + id));
         taskMapper.update(data, model);
