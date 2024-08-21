@@ -82,7 +82,7 @@ class TaskControllerTest {
         user.addTask(task);
         userRepository.save(user);
 
-        var request = get("/v1/tasks/" + user.getEmail())
+        var request = get("/v1/tasks/" + user.getEmail() + "/timespent")
                 .param("start-period", "2024-10-10")
                 .param("end-period", "2024-10-10");
         var result = mockMvc.perform(request)
@@ -91,5 +91,33 @@ class TaskControllerTest {
 
         String body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray();
+    }
+
+    @Test
+    @Order(4)
+    @Transactional
+    void testShowWorkTime() throws Exception {
+        User user = init.user();
+        Task task = init.task();
+        task.setStartedAt(LocalDateTime.parse("2024-10-10T11:53:32"));
+        task.setFinishedAt(LocalDateTime.parse("2024-10-10T16:53:32"));
+        Task task2 = init.task();
+        task2.setStartedAt(LocalDateTime.parse("2024-11-11T11:53:32"));
+        task2.setFinishedAt(LocalDateTime.parse("2024-11-11T16:53:32"));
+        taskRepository.save(task);
+        taskRepository.save(task2);
+        user.addTask(task);
+        user.addTask(task2);
+        userRepository.save(user);
+
+        var request = get("/v1/tasks/" + user.getEmail() + "/worktime")
+                .param("start-period", "2024-10-10")
+                .param("end-period", "2024-10-10");
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().hasSize(1);
     }
 }
