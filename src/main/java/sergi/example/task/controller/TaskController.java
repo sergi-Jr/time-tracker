@@ -45,7 +45,7 @@ public class TaskController {
         return taskService.update(id, data);
     }
 
-    @GetMapping(path = "/{username}")
+    @GetMapping(path = "/{username}/timespent")
     public List<Pair<Long, LocalTime>> showUserTrack(@RequestParam(name = "start-period") LocalDate start,
                                                      @RequestParam(name = "end-period") LocalDate end,
                                                      @PathVariable String username) {
@@ -54,5 +54,12 @@ public class TaskController {
                 .map(dto -> Pair.of(dto.getId(), dto.getTimeSpent()))
                 .collect(Collectors.toCollection(LinkedList::new));
 
+    }
+
+    @GetMapping(path = "/{username}/worktime")
+    public List<TaskDTO> showWorkTime(@RequestParam(name = "start-period") LocalDate start,
+                                      @RequestParam(name = "end-period") LocalDate end,
+                                      @PathVariable String username) {
+        return taskService.getWorkTime(username, start, end);
     }
 }
