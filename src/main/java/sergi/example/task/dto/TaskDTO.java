@@ -1,10 +1,9 @@
 package sergi.example.task.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,11 +14,9 @@ public class TaskDTO {
 
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp startedAt;
+    private LocalDateTime startedAt;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp finishedAt;
+    private LocalDateTime finishedAt;
 
     private Long userId;
 }
