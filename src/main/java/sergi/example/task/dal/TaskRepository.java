@@ -17,4 +17,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<TaskStatsDTO> findTasksStatsByUserIdAndDateBetween(@Param("userId") long userId,
                                                             @Param("start") LocalDateTime start,
                                                             @Param("end") LocalDateTime end);
+
+    @Query("""
+            select t from Task t
+            where t.user.id = :userId
+            and t.startedAt between :start and :end
+            and t.finishedAt between :start and :end
+                        """)
+    List<Task> findTasksByUserIdAndDateBetween(long userId, LocalDateTime start, LocalDateTime end);
 }
