@@ -11,10 +11,10 @@ import sergi.example.task.dal.TaskService;
 import sergi.example.task.dto.TaskDTO;
 import sergi.example.task.dto.TaskUpdateDTO;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 
@@ -23,7 +23,7 @@ public class TaskController {
     @PutMapping(path = "/{id}/start-tracking", produces = MediaType.APPLICATION_JSON_VALUE)
     public TaskDTO startTracking(@PathVariable Long id) {
         TaskUpdateDTO data = new TaskUpdateDTO();
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        LocalDateTime currentTime = LocalDateTime.now();
         data.setStartedAt(JsonNullable.of(currentTime));
         return taskService.update(id, data);
     }
@@ -31,7 +31,7 @@ public class TaskController {
     @PutMapping(path = "/{id}/end-tracking", produces = MediaType.APPLICATION_JSON_VALUE)
     public TaskDTO endTracking(@PathVariable Long id) {
         TaskUpdateDTO data = new TaskUpdateDTO();
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        LocalDateTime currentTime = LocalDateTime.now();
         data.setFinishedAt(JsonNullable.of(currentTime));
         return taskService.update(id, data);
     }
