@@ -35,7 +35,7 @@ class TaskControllerTest {
         Task task = init.task();
         taskRepository.save(task);
 
-        var request = put("/tasks/" + task.getId() + "/start-tracking");
+        var request = put("/v1/tasks/" + task.getId() + "/start-tracking");
         mockMvc.perform(request).andExpect(status().isOk());
 
         Optional<Task> opActual = taskRepository.findById(task.getId());
@@ -51,7 +51,7 @@ class TaskControllerTest {
         Task task = init.task();
         taskRepository.save(task);
 
-        var request = put("/tasks/" + task.getId() + "/end-tracking");
+        var request = put("/v1/tasks/" + task.getId() + "/end-tracking");
         mockMvc.perform(request).andExpect(status().isOk());
 
         Optional<Task> opActual = taskRepository.findById(task.getId());
