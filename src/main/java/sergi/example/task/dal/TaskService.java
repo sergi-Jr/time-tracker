@@ -44,4 +44,13 @@ public class TaskService {
         return taskRepository
                 .findTasksStatsByUserIdAndDateBetween(userId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
+
+    public List<TaskDTO> getWorkTime(String username, LocalDate start, LocalDate end) {
+        long userId = userRepository.findUserByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found, email: " + username)).getId();
+
+        List<Task> tasks = taskRepository
+                .findTasksByUserIdAndDateBetween(userId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
+        return tasks.stream().map(taskMapper::map).toList();
+    }
 }
