@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import sergi.example.model.BaseEntity;
 import sergi.example.task.Task;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class User implements BaseEntity {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private List<Task> tasks = new ArrayList<>();
 
     public void addTask(Task task) {
@@ -55,8 +55,8 @@ public class User implements BaseEntity {
     }
 
     @CreatedDate
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 }
