@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import sergi.example.task.dal.TaskRepository;
+import sergi.example.track.dal.TrackRepository;
 import sergi.example.user.User;
 import sergi.example.user.dal.UserRepository;
 import sergi.example.user.dto.UserCreateDTO;
@@ -18,6 +18,7 @@ import utils.InitData;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,7 +41,7 @@ class UserControllerTest {
     private ObjectMapper mapper;
 
     @Autowired
-    private TaskRepository taskRepository;
+    private TrackRepository trackRepository;
 
     @Test
     @Order(1)
@@ -85,5 +86,18 @@ class UserControllerTest {
         assertThat(data)
                 .containsEntry("email", actual.getEmail())
                 .containsEntry("name", actual.getName());
+    }
+
+    @Test
+    @Order(3)
+    void testDelete() throws Exception {
+        User user = init.user();
+        userRepository.save(user);
+
+        var request = delete("/v1/users/" + user.getId());
+        mockMvc.perform(request).andExpect(status().isNoContent());
+
+        User actual = userRepository.findById(user.getId()).orElse(null);
+        assertThat(actual).isNull();
     }
 }
