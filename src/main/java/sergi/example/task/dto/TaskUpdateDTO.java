@@ -20,4 +20,6 @@ public class TaskUpdateDTO {
     private JsonNullable<LocalDateTime> startedAt;
 
     private JsonNullable<LocalDateTime> finishedAt;
+
+    private JsonNullable<Long> duration;
 }

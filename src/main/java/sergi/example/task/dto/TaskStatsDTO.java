@@ -2,19 +2,19 @@ package sergi.example.task.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalTime;
+import sergi.example.model.HourMinute;
 
 @Getter
 @Setter
 public class TaskStatsDTO {
 
     private Long id;
-    private int diff;
+    private String name;
+    private HourMinute hourMinute;
 
-    public LocalTime getTimeSpent() {
-        int hours = diff / 60;
-        int minutes = diff % 60;
-        return LocalTime.of(hours, minutes);
+    public TaskStatsDTO(long id, String name, long duration) {
+        this.id = id;
+        this.name = name;
+        hourMinute = new HourMinute(duration);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sergi.example.exception.ResourceNotFoundException;
+import sergi.example.model.HourMinute;
 import sergi.example.task.Task;
 import sergi.example.task.dto.TaskDTO;
 import sergi.example.task.dto.TaskStatsDTO;
@@ -11,6 +12,7 @@ import sergi.example.task.dto.TaskUpdateDTO;
 import sergi.example.user.dal.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -52,5 +54,17 @@ public class TaskService {
         List<Task> tasks = taskRepository
                 .findTasksByUserIdAndDateBetween(userId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
         return tasks.stream().map(taskMapper::map).toList();
+    }
+
+    public HourMinute getAllTimeSpent(String username, LocalDate start, LocalDate end) {
+        long userId = userRepository.findUserByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found, email: " + username)).getId();
+        return taskRepository
+                .getTasksTimeSpentInMinutesByUserId(userId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
+    public LocalDateTime getTaskStartTimeByTaskId(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found: " + id)).getStartedAt();
     }
 }

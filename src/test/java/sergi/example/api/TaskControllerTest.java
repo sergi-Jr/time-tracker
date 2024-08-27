@@ -1,5 +1,6 @@
 package sergi.example.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ class TaskControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Test
     @Order(1)
     void testStartTracking() throws Exception {
@@ -58,6 +62,7 @@ class TaskControllerTest {
     @Order(2)
     void testEndTracking() throws Exception {
         Task task = init.task();
+        task.setStartedAt(LocalDateTime.now());
         taskRepository.save(task);
 
         var request = put("/v1/tasks/" + task.getId() + "/end-tracking");
@@ -78,6 +83,7 @@ class TaskControllerTest {
         Task task = init.task();
         task.setStartedAt(LocalDateTime.parse("2024-10-10T11:53:32"));
         task.setFinishedAt(LocalDateTime.parse("2024-10-10T16:53:32"));
+        task.setDuration(300);
         taskRepository.save(task);
         user.addTask(task);
         userRepository.save(user);
@@ -90,7 +96,7 @@ class TaskControllerTest {
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+        assertThatJson(body).isArray().hasSize(1);
     }
 
     @Test
@@ -119,5 +125,38 @@ class TaskControllerTest {
 
         String body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray().hasSize(1);
+    }
+
+    @Test
+    @Order(5)
+    @Transactional
+    void testShowAllTimeSpent() throws Exception {
+        User user = init.user();
+        Task task = init.task();
+        task.setStartedAt(LocalDateTime.parse("2024-10-10T11:53:32"));
+        task.setFinishedAt(LocalDateTime.parse("2024-10-10T16:53:32"));
+        task.setDuration(300);
+        Task task2 = init.task();
+        task2.setStartedAt(LocalDateTime.parse("2024-11-11T11:53:32"));
+        task2.setFinishedAt(LocalDateTime.parse("2024-11-11T16:53:32"));
+        task2.setDuration(300);
+        taskRepository.save(task);
+        taskRepository.save(task2);
+        user.addTask(task);
+        user.addTask(task2);
+        userRepository.save(user);
+
+        var request = get("/v1/tasks/" + user.getEmail() + "/all-timespent")
+                .param("start-period", "2024-10-10")
+                .param("end-period", "2024-11-11");
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("hour").isEqualTo(10),
+                v -> v.node("minute").isEqualTo(0));
     }
 }
