@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sergi.example.exception.ResourceNotFoundException;
+import sergi.example.track.dal.TrackRepository;
 import sergi.example.user.User;
 import sergi.example.user.dto.UserCreateDTO;
 import sergi.example.user.dto.UserDTO;
@@ -15,6 +16,7 @@ import sergi.example.user.dto.UserUpdateDTO;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final TrackRepository trackRepository;
 
     @Transactional
     public UserDTO create(UserCreateDTO data) {
@@ -30,5 +32,11 @@ public class UserService {
         userMapper.update(data, model);
         userRepository.save(model);
         return userMapper.map(model);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        trackRepository.deleteAllByUserId(id);
+        userRepository.deleteById(id);
     }
 }
