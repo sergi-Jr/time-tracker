@@ -42,8 +42,6 @@ public class Task implements BaseEntity {
 
     private LocalDateTime finishedAt;
 
-    private long duration;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
