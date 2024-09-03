@@ -44,4 +44,14 @@ public interface TrackRepository extends JpaRepository<Track, CompositeTrackKey>
             where tr.userId = :userId
             """)
     List<Track> findAllByUserId(long userId);
+
+    @Modifying
+    @Query("""
+            update Track tr set tr.duration =
+            (SELECT DATEDIFF(minute, t.startedAt, t.finishedAt) as diff
+            from Task t
+            where t.id = tr.taskId)
+            where tr.duration = 0
+            """)
+    void setDuration();
 }
